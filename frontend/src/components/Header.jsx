@@ -21,13 +21,13 @@ export default function Header() {
               <LinkContainer to="/cart">
                 <Nav.Link>
                   <FaShoppingCart />
-                  Cart
+                  購物車
                 </Nav.Link>
               </LinkContainer>
               <LinkContainer to="/login">
                 <Nav.Link>
                   <FaUser />
-                  Sign in
+                  登入
                 </Nav.Link>
               </LinkContainer>
             </Nav>
