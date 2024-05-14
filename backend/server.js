@@ -1,8 +1,9 @@
 import express from "express";
+import dotenv from "dotenv";
 // const express = require("express");
 import products from "./data/products.js";
 import { emitWarning } from "process";
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 const app = express();
 

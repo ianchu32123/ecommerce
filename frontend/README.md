@@ -71,3 +71,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 npm i react-bootstrap bootstrap react-icons
 npm i react-router-dom react-router-bootstrap
+npm i nodemon concurrently
