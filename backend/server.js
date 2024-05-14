@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 import connectDB from "./config/db.js";
 import products from "./data/products.js";
-import { emitWarning } from "process";
 const port = process.env.PORT || 5000;
 
 connectDB(); //連線Mongo db
