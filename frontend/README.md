@@ -73,3 +73,4 @@ npm i react-bootstrap bootstrap react-icons
 npm i react-router-dom react-router-bootstrap
 npm i nodemon concurrently
 npm i mongoose
+npm i bcryptjs
