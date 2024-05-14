@@ -1,0 +1,15 @@
+{
+  "name": "ecommerce",
+  "version": "2.0.0",
+  "description": "eCommerce project for NcuMis 2024",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server.js"
+  },
+  "author": "ianchu",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
