@@ -5,6 +5,7 @@ import { Row, Col, Image, ListGroup, Card, Button } from "react-bootstrap";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+
 export default function ProductScreen() {
   const { id: productId } = useParams();
   const {
