@@ -2,16 +2,19 @@ import React from "react";
 import { Row, Col } from "react-bootstrap";
 import { useGetProductsQuery } from "../slices/productApiSlice";
 import Product from "../components/Product";
-
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 export const HomeScreen = () => {
   const { data: products, isLoading, isError, error } = useGetProductsQuery();
 
   return (
     <>
       {isLoading ? (
-        <h2>Loading...</h2>
+        <Loader />
       ) : isError ? (
-        <h2>{error?.data?.message || error.error}</h2>
+        <Message variant="danger">
+          {error?.data?.message || error.error}
+        </Message>
       ) : (
         <>
           <h1>最新產品</h1>
