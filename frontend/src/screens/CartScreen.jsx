@@ -10,7 +10,7 @@ import {
   Button,
 } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
-import { addToCart } from "../slices/cartSlice";
+import { addToCart, removeFromCart } from "../slices/cartSlice";
 import Message from "../components/Message";
 
 export default function CartScreen() {
@@ -20,8 +20,16 @@ export default function CartScreen() {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
-  const addToCartHandler = function (product, qty) {
+  const addToCartHandler = async function (product, qty) {
     dispatch(addToCart({ ...product, qty }));
+  };
+
+  const removeFromCartHandler = async function (id) {
+    dispatch(removeFromCart(id));
+  };
+
+  const checkoutHandler = function () {
+    navigate("/login?redirect=/shipping");
   };
   return (
     <Row>
@@ -59,7 +67,11 @@ export default function CartScreen() {
                     </Form.Control>
                   </Col>
                   <Col md={2}>
-                    <Button type="button" variant="light">
+                    <Button
+                      type="button"
+                      variant="light"
+                      onClick={() => removeFromCartHandler(item._id)}
+                    >
                       <FaTrash />
                     </Button>
                   </Col>
@@ -87,6 +99,7 @@ export default function CartScreen() {
                 type="button"
                 className="btn-block"
                 disabled={cartItems.length === 0}
+                onClick={checkoutHandler}
               >
                 確認結帳
               </Button>
