@@ -1,15 +1,46 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useLoginMutation } from "../slices/userApiSlice";
+import { setCredentials } from "../slices/authSlice";
 import FormContainer from "../components/FormContainer";
+import Loader from "../components/Loader";
 
 export default function LoginScreen() {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
-  const submitHandler = function (e) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [login, { isLoading }] = useLoginMutation();
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const { search } = useLocation();
+  const sp = new URLSearchParams(search);
+  const redirect = sp.get("redirect") || "/";
+
+  useEffect(
+    function () {
+      if (userInfo) {
+        navigate(redirect);
+      }
+    },
+    [userInfo, redirect, navigate]
+  );
+
+  const submitHandler = async function (e) {
     e.preventDefault();
-    console.log("submit");
+    try {
+      const res = await login({ email, password }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      navigate(redirect);
+    } catch (error) {
+      toast.error(error?.data?.message || error.error);
+    }
   };
   return (
     <FormContainer>
@@ -35,14 +66,24 @@ export default function LoginScreen() {
           ></Form.Control>
         </Form.Group>
 
-        <Button type="submit" variant="primary" className="mt-2">
+        <Button
+          type="submit"
+          variant="primary"
+          className="mt-2"
+          disabled={isLoading}
+        >
           登入
         </Button>
+
+        {isLoading && <Loader />}
       </Form>
 
       <Row className="py-3">
         <Col>
-          新顧客?<Link to="/register">註冊</Link>
+          新顧客?
+          <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
+            註冊
+          </Link>
         </Col>
       </Row>
     </FormContainer>
