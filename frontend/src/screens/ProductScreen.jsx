@@ -46,7 +46,7 @@ export default function ProductScreen() {
   }
 
   if (!Products) {
-    return <Message variant="danger">Product not found</Message>;
+    return <Message variant="danger">找不到該產品</Message>;
   }
 
   return (
@@ -67,7 +67,7 @@ export default function ProductScreen() {
             <ListGroup.Item>
               <Rating
                 value={Products.rating}
-                text={`${Products.numReviews} reviews`}
+                text={`${Products.numReviews}則評價`}
               />
             </ListGroup.Item>
             <ListGroup.Item>價格: {Products.price}</ListGroup.Item>
@@ -99,7 +99,7 @@ export default function ProductScreen() {
               {Products.countInStock > 0 && (
                 <ListGroup.Item>
                   <Row>
-                    <Col>Qty</Col>
+                    <Col>數量</Col>
                     <Col>
                       <Form.Control
                         as="select"

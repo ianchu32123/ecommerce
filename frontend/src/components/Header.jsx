@@ -34,7 +34,7 @@ export default function Header() {
           <LinkContainer to="/">
             <Navbar.Brand>
               <img src={logo} alt="ProShop" />
-              Proshop
+              專題購物網站
             </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />

@@ -34,7 +34,7 @@ export default function CartScreen() {
   return (
     <Row>
       <Col md={8}>
-        <h1 style={{ marginBottom: "20px" }}>Shopping Cart</h1>
+        <h1 style={{ marginBottom: "20px" }}>購物車</h1>
         {cartItems.length === 0 ? (
           <Message>
             購物車是空的 <Link to="/">回首頁</Link>
