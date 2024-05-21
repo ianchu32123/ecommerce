@@ -47,8 +47,6 @@ const cartSlice = createSlice({
     },
     clearCartItems: (state) => {
       state.cartItems = [];
-      state.shippingAddress = {};
-      state.paymentMethod = "Paypal";
       return updateCart(state);
     },
   },
