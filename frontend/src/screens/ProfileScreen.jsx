@@ -3,8 +3,10 @@ import { Table, Form, Button, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { FaTimes } from "react-icons/fa";
 import { useProfileMutation } from "../slices/userApiSlice";
 import { setCredentials } from "../slices/authSlice";
+import { useGetMyOrdersQuery } from "../slices/orderApiSlice";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 
@@ -20,6 +22,8 @@ export default function ProfileScreen() {
 
   const [updateProfile, { isLoading: loadingUpdateProfile }] =
     useProfileMutation();
+
+  const { data: orders, isLoading, error } = useGetMyOrdersQuery();
 
   useEffect(
     function () {
@@ -90,7 +94,7 @@ export default function ProfileScreen() {
           <Form.Group controlId="comfirmPassword" className="my-2">
             <Form.Label>確認密碼</Form.Label>
             <Form.Control
-              type="comfirmPassword"
+              type="password"
               placeholder="確認密碼"
               value={comfirmpassword}
               onChange={(e) => setcomfirmpassword(e.target.value)}
@@ -103,7 +107,61 @@ export default function ProfileScreen() {
           {loadingUpdateProfile && <Loader />}
         </Form>
       </Col>
-      <Col md={9}>123454</Col>
+      <Col md={9}>
+        <h2>我的訂單</h2>
+        {isLoading ? (
+          <Loader />
+        ) : error ? (
+          <Message variant="danger">
+            {error?.data?.message || error.error}
+          </Message>
+        ) : (
+          <Table striped bordered hover responsive className="table-sm">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>日期</th>
+                <th>總價</th>
+                <th>是否已支付</th>
+                <th>是否已到貨</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order._id}>
+                  <td>{order._id}</td>
+                  <td>{order.createdAt.substring(0, 10)}</td>
+                  <td>NT{order.totalPrice}</td>
+                  <td>
+                    {order.isPaid ? (
+                      order.paidAt.substring(0, 10)
+                    ) : (
+                      <FaTimes style={{ color: "red" }} />
+                    )}
+                  </td>
+
+                  <td>
+                    {order.isDelivered ? (
+                      order.deliveredAt.substring(0, 10)
+                    ) : (
+                      <FaTimes style={{ color: "red" }} />
+                    )}
+                  </td>
+
+                  <td>
+                    <LinkContainer to={`/order/${order._id}`}>
+                      <Button className="btn-sm" variant="light">
+                        訂單細節
+                      </Button>
+                    </LinkContainer>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+      </Col>
     </Row>
   );
 }
