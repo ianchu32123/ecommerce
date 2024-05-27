@@ -22,4 +22,24 @@ const getProductsById = asyncHandler(async (req, res) => {
   }
 });
 
-export { getProducts, getProductsById };
+//@desc 建立新產品
+//@route Post /api/products
+//@access Private/admin
+const createProduct = asyncHandler(async (req, res) => {
+  const product = new Product({
+    name: "Sample name",
+    price: 0,
+    user: req.user._id,
+    image: "/image/sample.jpg",
+    brand: "Sample brand",
+    category: "sample category",
+    countInStock: 0,
+    numReviews: 0,
+    description: "Sample description",
+  });
+
+  const createProduct = await product.save();
+  res.status(201).json(createProduct);
+});
+
+export { getProducts, getProductsById, createProduct };
