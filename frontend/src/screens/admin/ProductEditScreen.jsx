@@ -94,6 +94,7 @@ export default function ProductEditScreen() {
                 }}
               ></Form.Control>
             </Form.Group>
+
             {/* image*/}
 
             <Form.Group controlId="price" className="my-2">
@@ -101,7 +102,7 @@ export default function ProductEditScreen() {
               <Form.Control
                 type="number"
                 placeholder="輸入價格"
-                value={name}
+                value={price}
                 onChange={(e) => {
                   setprice(e.target.value);
                 }}
