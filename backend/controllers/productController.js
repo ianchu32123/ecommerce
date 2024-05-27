@@ -43,7 +43,7 @@ const createProduct = asyncHandler(async (req, res) => {
 });
 
 //@desc 更新產品
-//@route PUT /api/products
+//@route PUT /api/products/:id
 //@access Private/admin
 const updateProduct = asyncHandler(async (req, res) => {
   const { name, price, description, image, brand, category, countInStock } =
@@ -69,4 +69,27 @@ const updateProduct = asyncHandler(async (req, res) => {
   }
 });
 
-export { getProducts, getProductsById, createProduct, updateProduct };
+//@desc 刪除產品
+//@route delete /api/products/:id
+//@access Private/admin
+const deleteProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+
+  if (product) {
+    await Product.deleteOne({
+      _id: product._id,
+    });
+    res.status(200).json({ message: "Product delete" });
+  } else {
+    res.status(404);
+    throw new Error("找不到該產品");
+  }
+});
+
+export {
+  getProducts,
+  getProductsById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+};

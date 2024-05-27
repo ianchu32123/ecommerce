@@ -7,6 +7,7 @@ import Loader from "../../components/Loader";
 import {
   useGetProductsQuery,
   useCreateProductMutation,
+  useDeleteProductMutation,
 } from "../../slices/productApiSlice";
 
 export default function ProductListScreen() {
@@ -15,8 +16,19 @@ export default function ProductListScreen() {
   const [createProduct, { isLoading: loadingCreate }] =
     useCreateProductMutation();
 
-  const deleteHandler = function (id) {
-    console.log("delete", id);
+  const [deleteProduct, { isLoading: loadingDelete }] =
+    useDeleteProductMutation();
+
+  const deleteHandler = async function (id) {
+    if (window.confirm("你確定要刪除該產品嗎")) {
+      try {
+        await deleteProduct(id);
+        toast.success("刪除成功");
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
   };
 
   const createProductHandler = async function () {
@@ -42,7 +54,10 @@ export default function ProductListScreen() {
           </Button>
         </Col>
       </Row>
+
       {loadingCreate && <Loader />}
+      {loadingDelete && <Loader />}
+
       {isLoading ? (
         <Loader />
       ) : error ? (
