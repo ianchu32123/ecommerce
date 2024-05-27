@@ -42,4 +42,31 @@ const createProduct = asyncHandler(async (req, res) => {
   res.status(201).json(createProduct);
 });
 
-export { getProducts, getProductsById, createProduct };
+//@desc 更新產品
+//@route PUT /api/products
+//@access Private/admin
+const updateProduct = asyncHandler(async (req, res) => {
+  const { name, price, description, image, brand, category, countInStock } =
+    req.body;
+
+  const product = await Product.findById(req.params.id);
+
+  if (product) {
+    product.name = name;
+    product.price = price;
+    product.description = description;
+    product.image = image;
+    product.brand = brand;
+    product.category = category;
+    product.countInStock = countInStock;
+
+    const updateProduct = await product.save();
+
+    res.json(updateProduct);
+  } else {
+    res.status(404);
+    throw new Error("找不到該產品");
+  }
+});
+
+export { getProducts, getProductsById, createProduct, updateProduct };
