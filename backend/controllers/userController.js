@@ -123,28 +123,66 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 //@route GET /api/users
 //@access Private/Admin
 const getUsers = asyncHandler(async (req, res) => {
-  res.json("get users");
+  const users = await User.find({});
+  res.status(200).json(users);
 });
 
 //@desc 查看單一
 //@route GET /api/users/:id
 //@access Private/Admin
 const getUserByID = asyncHandler(async (req, res) => {
-  res.json("get user by id");
+  const user = await User.findById(req.params.id).select("-password");
+
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(404);
+    throw new Error("找不到使用者");
+  }
 });
 
 //@desc 刪除使用者
 //@route delete /api/users/:id
 //@access Private/Admin
 const deleteUsers = asyncHandler(async (req, res) => {
-  res.json("delete user");
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    if (user.isAdmin) {
+      res.status(400);
+      throw new Error("不能刪除管理員");
+    }
+    await User.deleteOne({ _id: user._id });
+    res.status(200).json({ message: "刪除使用者成功" });
+  } else {
+    res.status(400);
+    throw new Error("找不到該使用者");
+  }
 });
 
 //@desc 更新使用者
 //@route put /api/users/:id
 //@access Private/Admin
 const updateUser = asyncHandler(async (req, res) => {
-  res.json("update user");
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.isAdmin = Boolean(req.body.isAdmin);
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(400);
+    throw new Error("找不到該使用者");
+  }
 });
 
 export {
