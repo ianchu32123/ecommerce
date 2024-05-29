@@ -5,11 +5,11 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../slices/userApiSlice";
 import { logout } from "../slices/authSlice";
+import SearchBox from "./SearchBox";
 import logo from "../assets/logo.png";
 
 export default function Header() {
   const { cartItems } = useSelector((state) => state.cart);
-
   const { userInfo } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
@@ -39,13 +39,14 @@ export default function Header() {
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ms-auto">
+            <SearchBox className="search-box-container" />
+            <Nav className="ms-auto align-items-center">
               <LinkContainer to="/cart">
-                <Nav.Link>
+                <Nav.Link className="d-flex align-items-center">
                   <FaShoppingCart />
-                  購物車
+                  <span className="ms-1">購物車</span>
                   {cartItems.length > 0 && (
-                    <Badge pill bg="success" style={{ marginLeft: "5px" }}>
+                    <Badge pill bg="success" className="ms-1">
                       {cartItems.reduce((acc, cur) => acc + cur.qty, 0)}
                     </Badge>
                   )}
@@ -62,13 +63,12 @@ export default function Header() {
                 </NavDropdown>
               ) : (
                 <LinkContainer to="/login">
-                  <Nav.Link href="/login">
+                  <Nav.Link href="/login" className="d-flex align-items-center">
                     <FaUser />
-                    登入
+                    <span className="ms-1">登入</span>
                   </Nav.Link>
                 </LinkContainer>
               )}
-
               {userInfo && userInfo.isAdmin && (
                 <NavDropdown title="Admin" id="adminmenu">
                   <LinkContainer to="/admin/productlist">
