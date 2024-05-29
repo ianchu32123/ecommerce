@@ -1,9 +1,11 @@
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button, Row, Col } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
+import Paginate from "../../components/Paginate";
 import {
   useGetProductsQuery,
   useCreateProductMutation,
@@ -11,11 +13,14 @@ import {
 } from "../../slices/productApiSlice";
 
 export default function ProductListScreen() {
-  const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+  const { pageNumber = 1 } = useParams(); // default to 1 if pageNumber is undefined
+
+  const { data, isLoading, error, refetch } = useGetProductsQuery({
+    pageNumber,
+  });
 
   const [createProduct, { isLoading: loadingCreate }] =
     useCreateProductMutation();
-
   const [deleteProduct, { isLoading: loadingDelete }] =
     useDeleteProductMutation();
 
@@ -38,10 +43,13 @@ export default function ProductListScreen() {
         console.log(response); // 打印出返回結果
         refetch();
       } catch (error) {
-        toast.error(error?.data?.message || error.error);
+        toast.error(
+          error?.data?.message || error.message || "An error occurred"
+        );
       }
     }
   };
+
   return (
     <>
       <Row className="align-items-center">
@@ -61,7 +69,9 @@ export default function ProductListScreen() {
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <Message variant="danger">{error}</Message>
+        <Message variant="danger">
+          {error?.data?.message || error.message || "An error occurred"}
+        </Message>
       ) : (
         <>
           <Table striped hover responsive className="table-sm">
@@ -76,7 +86,7 @@ export default function ProductListScreen() {
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
+              {data.products.map((product) => (
                 <tr key={product._id}>
                   <td>{product._id}</td>
                   <td>{product.name}</td>
@@ -101,6 +111,7 @@ export default function ProductListScreen() {
               ))}
             </tbody>
           </Table>
+          <Paginate pages={data.pages} page={data.page} isAdmin={true} />
         </>
       )}
     </>
