@@ -126,6 +126,7 @@ export default function ProductEditScreen() {
                 onChange={uploadFileHandler}
               ></Form.Control>
             </Form.Group>
+            {loadingUpload && <Loader />}
 
             <Form.Group controlId="price" className="my-2">
               <Form.Label>產品價格</Form.Label>

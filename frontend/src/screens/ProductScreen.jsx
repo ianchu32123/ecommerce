@@ -17,7 +17,7 @@ import {
   Form,
 } from "react-bootstrap";
 import { addToCart } from "../slices/cartSlice";
-
+import Meta from "../components/Meta";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -84,6 +84,7 @@ export default function ProductScreen() {
         回到首頁
       </Link>
       <>
+        <Meta title={product.name} />
         <Row>
           <Col md={5}>
             <Image src={product.image} alt={product.name} fluid />
