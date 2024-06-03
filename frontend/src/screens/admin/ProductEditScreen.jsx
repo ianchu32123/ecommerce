@@ -85,6 +85,7 @@ export default function ProductEditScreen() {
       toast.error(error?.data?.message || error.error);
     }
   };
+
   return (
     <>
       <Link to="/admin/productlist" className="btn btn-light mt-3">
