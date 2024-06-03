@@ -1,5 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Order from "../models/orderModel.js";
+import axios from "axios";
 
 //@desc 建立新訂單
 //@route POST /api/orders
@@ -14,10 +15,22 @@ const addOrderItems = asyncHandler(async (req, res) => {
     shippingPrice,
     totalPrice,
   } = req.body;
+
   if (orderItems && orderItems.length === 0) {
     res.status(400);
     throw new Error("No order items");
   } else {
+    const limitItems = orderItems.filter((item) => item.category === "Limit");
+    if (limitItems.length > 0) {
+      const { age } = req.body;
+      if (age <= 18) {
+        res.status(403);
+        throw new Error(
+          "Age verification failed. You must be over 18 to purchase limit category items."
+        );
+      }
+    }
+
     const order = new Order({
       orderItems: orderItems.map((x) => ({
         ...x,
@@ -114,6 +127,23 @@ const getOrders = asyncHandler(async (req, res) => {
   res.status(200).json(orders);
 });
 
+//@desc 刪除訂單
+//@route delete /api/orders/:id
+//@access Private/admin
+const deleteOrder = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    await Order.deleteOne({
+      _id: order._id,
+    });
+    res.status(200).json({ message: "Order delete" });
+  } else {
+    res.status(404);
+    throw new Error("找不到該訂單");
+  }
+});
+
 export {
   addOrderItems,
   getMyOrders,
@@ -121,4 +151,5 @@ export {
   getOrderById,
   updateOrderToDelivered,
   updateOrderToPaid,
+  deleteOrder,
 };

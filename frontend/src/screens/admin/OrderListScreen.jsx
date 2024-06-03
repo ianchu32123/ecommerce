@@ -1,15 +1,36 @@
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaTrash } from "react-icons/fa";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
-import { useGetOrdersQuery } from "../../slices/orderApiSlice";
+import { toast } from "react-toastify";
+import {
+  useDeleteOrderMutation,
+  useGetOrdersQuery,
+} from "../../slices/orderApiSlice";
 
 export default function OrderListScreen() {
-  const { data: orders, isLoading, error } = useGetOrdersQuery();
+  const { data: orders, isLoading, error, refetch } = useGetOrdersQuery();
+
+  const [deleteOrder, { isLoading: loadingDelete }] = useDeleteOrderMutation();
+
+  const deleteHandler = async function (id) {
+    if (window.confirm("你確定要刪除該訂單嗎")) {
+      try {
+        await deleteOrder(id);
+        toast.success("刪除成功");
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
   return (
     <>
       <h1>所有訂單</h1>
+
+      {loadingDelete && <Loader />}
+
       {isLoading ? (
         <Loader />
       ) : error ? (
@@ -24,6 +45,7 @@ export default function OrderListScreen() {
               <th>訂單總額</th>
               <th>是否已支付</th>
               <th>是否已到達</th>
+              <th></th>
               <th></th>
             </tr>
           </thead>
@@ -64,6 +86,15 @@ export default function OrderListScreen() {
                       訂單細節
                     </Button>
                   </LinkContainer>
+                </td>
+                <td>
+                  <Button
+                    variant="danger"
+                    className="btn-sm"
+                    onClick={() => deleteHandler(order._id)}
+                  >
+                    <FaTrash />
+                  </Button>
                 </td>
               </tr>
             ))}

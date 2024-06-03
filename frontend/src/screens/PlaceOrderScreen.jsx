@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import CheckoutSteps from "../components/CheckoutSteps";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
+import WebcamCapture from "../components/WebcamCapture";
 import { useCreateOrderMutation } from "../slices/orderApiSlice";
 import { clearCartItems } from "../slices/cartSlice";
 
@@ -25,6 +26,8 @@ export default function PlaceOrderScreen() {
   } = cart;
 
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
+  const [showModal, setShowModal] = useState(false);
+  const [ageVerified, setAgeVerified] = useState(false);
 
   useEffect(() => {
     if (!shippingAddress.address) {
@@ -34,7 +37,7 @@ export default function PlaceOrderScreen() {
     }
   }, [shippingAddress.address, paymentMethod, navigate]);
 
-  const placeOrderHandler = async () => {
+  const placeOrderHandler = async (age) => {
     try {
       const res = await createOrder({
         orderItems: cartItems,
@@ -44,12 +47,34 @@ export default function PlaceOrderScreen() {
         shippingPrice,
         taxPrice,
         totalPrice,
+        age,
       }).unwrap();
 
       dispatch(clearCartItems());
       navigate(`/order/${res._id}`);
     } catch (err) {
       toast.error(err.data?.message || err.message || "An error occurred");
+    }
+  };
+
+  const handleAgeVerified = (isVerified) => {
+    setAgeVerified(isVerified);
+    setShowModal(false);
+    if (isVerified) {
+      placeOrderHandler(19); // Passing age > 18 for successful verification
+    } else {
+      toast.error("年齡驗證失敗。您必須年滿18歲才能購買此產品。");
+    }
+  };
+
+  const handlePlaceOrderClick = () => {
+    const requiresAgeVerification = cartItems.some(
+      (item) => item.category === "Limit"
+    );
+    if (requiresAgeVerification) {
+      setShowModal(true);
+    } else {
+      placeOrderHandler();
     }
   };
 
@@ -147,7 +172,7 @@ export default function PlaceOrderScreen() {
               <ListGroup.Item>
                 {error && (
                   <Message variant="danger">
-                    {error.data?.message || error.message}
+                    {typeof error === "object" ? JSON.stringify(error) : error}
                   </Message>
                 )}
               </ListGroup.Item>
@@ -157,7 +182,7 @@ export default function PlaceOrderScreen() {
                   type="button"
                   className="btn-block"
                   disabled={cartItems.length === 0}
-                  onClick={placeOrderHandler}
+                  onClick={handlePlaceOrderClick}
                 >
                   送出訂單
                 </Button>
@@ -167,6 +192,12 @@ export default function PlaceOrderScreen() {
           </Card>
         </Col>
       </Row>
+
+      <WebcamCapture
+        show={showModal}
+        handleClose={() => setShowModal(false)}
+        onAgeVerified={handleAgeVerified}
+      />
     </>
   );
 }
