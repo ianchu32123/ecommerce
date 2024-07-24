@@ -1,5 +1,5 @@
 {
-  "watch": ["backend/server.js", "backend/routes"],
-  "ext": "js,json,py",
-  "exec": "concurrently \"npm run server:start\" \"npm run client\" \"cd backend/face_recognition && py app.py\""
+  "watch": ["backend"],
+  "ext": "js,json",
+  "exec": "node backend/server.js"
 }

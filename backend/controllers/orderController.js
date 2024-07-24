@@ -25,9 +25,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
       const { age } = req.body;
       if (age <= 18) {
         res.status(403);
-        throw new Error(
-          "Age verification failed. You must be over 18 to purchase limit category items."
-        );
+        throw new Error("年齡不達標");
       }
     }
 

@@ -6,10 +6,10 @@
   "main": "server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "server": "nodemon backend/server.js",
+    "server": "nodemon",
     "server:start": "node backend/server.js",
     "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run server:start\" \"npm run client\" \"cd backend/face_recognition && py -m flask run --port 6000\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"cd backend/face_recognition && py -m flask run --port 6000\"",
     "data:import": "node backend/seeder.js",
     "data:destroy": "node backend/seeder.js -d"
   },

@@ -5,7 +5,6 @@ import { Button, Modal } from "react-bootstrap";
 
 const WebcamCapture = ({ show, handleClose, onAgeVerified }) => {
   const webcamRef = useRef(null);
-  const [result, setResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const capture = useCallback(async () => {
@@ -21,9 +20,8 @@ const WebcamCapture = ({ show, handleClose, onAgeVerified }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      setResult(response.data);
       setIsLoading(false);
-      onAgeVerified(response.data[0].age > 18);
+      onAgeVerified(response.data[0].age);
     } catch (error) {
       console.error("Error analyzing image:", error);
       setIsLoading(false);
@@ -45,12 +43,6 @@ const WebcamCapture = ({ show, handleClose, onAgeVerified }) => {
         <Button onClick={capture} disabled={isLoading}>
           {isLoading ? "驗證中..." : "拍照並驗證"}
         </Button>
-        {result && (
-          <div>
-            <h2>結果</h2>
-            <p>年齡: {result[0].age}</p>
-          </div>
-        )}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>

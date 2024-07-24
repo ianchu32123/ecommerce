@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
+import {
+  Button,
+  Row,
+  Col,
+  ListGroup,
+  Image,
+  Card,
+  Modal,
+} from "react-bootstrap";
 import { toast } from "react-toastify";
 import CheckoutSteps from "../components/CheckoutSteps";
 import Message from "../components/Message";
@@ -27,7 +35,9 @@ export default function PlaceOrderScreen() {
 
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
   const [showModal, setShowModal] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
   const [ageVerified, setAgeVerified] = useState(false);
+  const [age, setAge] = useState(null);
 
   useEffect(() => {
     if (!shippingAddress.address) {
@@ -57,14 +67,11 @@ export default function PlaceOrderScreen() {
     }
   };
 
-  const handleAgeVerified = (isVerified) => {
-    setAgeVerified(isVerified);
+  const handleAgeVerified = (verifiedAge) => {
+    setAge(verifiedAge);
     setShowModal(false);
-    if (isVerified) {
-      placeOrderHandler(19); // Passing age > 18 for successful verification
-    } else {
-      toast.error("年齡驗證失敗。您必須年滿18歲才能購買此產品。");
-    }
+    setShowResultModal(true);
+    setAgeVerified(verifiedAge > 18);
   };
 
   const handlePlaceOrderClick = () => {
@@ -75,6 +82,15 @@ export default function PlaceOrderScreen() {
       setShowModal(true);
     } else {
       placeOrderHandler();
+    }
+  };
+
+  const handleResultClose = () => {
+    setShowResultModal(false);
+    if (ageVerified) {
+      placeOrderHandler(age);
+    } else {
+      toast.error("年齡驗證失敗。您必須年滿18歲才能購買此產品。");
     }
   };
 
@@ -198,6 +214,25 @@ export default function PlaceOrderScreen() {
         handleClose={() => setShowModal(false)}
         onAgeVerified={handleAgeVerified}
       />
+
+      <Modal show={showResultModal} onHide={handleResultClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>年齡驗證結果</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>檢測結果年齡: {age}</p>
+          {ageVerified ? (
+            <p>年齡驗證成功，您已年滿18歲。</p>
+          ) : (
+            <p>年齡驗證失敗，您必須年滿18歲才能購買此產品。</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleResultClose}>
+            確認
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

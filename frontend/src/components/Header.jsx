@@ -71,6 +71,9 @@ export default function Header() {
               )}
               {userInfo && userInfo.isAdmin && (
                 <NavDropdown title="Admin" id="adminmenu">
+                  <LinkContainer to="/admin/report">
+                    <NavDropdown.Item>銷售報告</NavDropdown.Item>
+                  </LinkContainer>
                   <LinkContainer to="/admin/productlist">
                     <NavDropdown.Item>產品</NavDropdown.Item>
                   </LinkContainer>
