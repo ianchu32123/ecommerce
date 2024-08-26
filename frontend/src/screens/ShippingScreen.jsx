@@ -30,7 +30,7 @@ export default function ShippingScreen() {
     <FormContainer>
       <CheckoutSteps step1 step2 />
 
-      <h1>運送方式</h1>
+      <h1>填寫地址</h1>
       <Form onSubmit={submitHandler} className="my-2">
         <Form.Group controlId="address">
           <Form.Label>地址</Form.Label>

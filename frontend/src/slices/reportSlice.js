@@ -18,6 +18,8 @@ const reportSlice = createSlice({
   initialState: {
     dailySales: {},
     categorySales: {},
+    todayOrderCount: 0,
+    bestSellingProducts: [],
     loading: false,
     error: null,
   },
@@ -30,6 +32,8 @@ const reportSlice = createSlice({
         state.loading = false;
         state.dailySales = action.payload.dailySales;
         state.categorySales = action.payload.categorySales;
+        state.todayOrderCount = action.payload.todayOrderCount;
+        state.bestSellingProducts = action.payload.bestSellingProducts;
       })
       .addCase(fetchSalesReport.rejected, (state, action) => {
         state.loading = false;

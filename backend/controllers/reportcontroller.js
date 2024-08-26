@@ -28,7 +28,32 @@ const getSalesReport = asyncHandler(async (req, res) => {
     }
   }
 
-  res.json({ dailySales, categorySales });
+  // 今日訂單數量
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // 設置時間為當天的開始
+  const todayOrders = orders.filter((order) => order.paidAt >= today);
+  const todayOrderCount = todayOrders.length;
+
+  // 今日熱銷產品
+  const productSales = {};
+  todayOrders.forEach((order) => {
+    order.orderItems.forEach((item) => {
+      if (!productSales[item.product]) {
+        productSales[item.product] = {
+          qty: 0,
+          name: item.name,
+          price: item.price,
+        };
+      }
+      productSales[item.product].qty += item.qty;
+    });
+  });
+
+  const bestSellingProducts = Object.values(productSales)
+    .sort((a, b) => b.qty - a.qty)
+    .slice(0, 5);
+
+  res.json({ dailySales, categorySales, todayOrderCount, bestSellingProducts });
 });
 
 export { getSalesReport };

@@ -2,6 +2,7 @@ import React from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { useGetProductsQuery } from "../slices/productApiSlice";
+import CategoryCards from "../components/CategoryCards";
 import Product from "../components/Product";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -18,7 +19,10 @@ export const HomeScreen = () => {
   return (
     <>
       {!keyword ? (
-        <ProductCarousel />
+        <>
+          <ProductCarousel />
+          <CategoryCards />{" "}
+        </>
       ) : (
         <Link to="/" className="btn btn-light mb-4">
           回首頁

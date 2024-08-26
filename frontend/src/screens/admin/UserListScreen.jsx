@@ -39,8 +39,8 @@ export default function UserListScreen() {
             <tr>
               <th>ID</th>
               <th>使用者名稱</th>
-              <th>Email</th>
-              <th>Admin</th>
+              <th>信箱</th>
+              <th>管理員</th>
               <th></th>
             </tr>
           </thead>

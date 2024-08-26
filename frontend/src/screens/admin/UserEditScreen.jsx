@@ -91,7 +91,7 @@ export default function ProductEditScreen() {
             <Form.Group controlId="isAdmin" className="my-2">
               <Form.Check
                 type="checkbox"
-                label="isAdmin"
+                label="管理員"
                 checked={isadmin}
                 onChange={(e) => setisadmin(e.target.value)}
               ></Form.Check>

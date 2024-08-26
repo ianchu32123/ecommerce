@@ -77,7 +77,7 @@ export default function OrderScreen() {
         refetch();
         toast.success("付款成功");
       } catch (err) {
-        toast.error(err.message || "An error occurred");
+        toast.error(err.message || "發生錯誤");
       }
     });
   };
@@ -123,7 +123,7 @@ export default function OrderScreen() {
                 {order.user.email}
               </p>
               <p>
-                <strong>地址:</strong>
+                <strong>運送地址:</strong>
                 {order.shippingAddress.address}, {order.shippingAddress.city}{" "}
                 {order.shippingAddress.postalCode},
                 {order.shippingAddress.country}

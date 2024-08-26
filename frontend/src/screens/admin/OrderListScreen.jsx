@@ -40,11 +40,11 @@ export default function OrderListScreen() {
           <thead>
             <tr>
               <th>ID</th>
-              <th>使用者</th>
-              <th>日期</th>
+              <th>購買人</th>
+              <th>訂單日期</th>
               <th>訂單總額</th>
-              <th>是否已支付</th>
-              <th>是否已到達</th>
+              <th>付款日期</th>
+              <th>到達日期</th>
               <th></th>
               <th></th>
             </tr>
@@ -57,7 +57,7 @@ export default function OrderListScreen() {
                 <td>
                   {order.createdAt ? order.createdAt.substring(0, 10) : "N/A"}
                 </td>
-                <td>NT{order.totalPrice}</td>
+                <td>${order.totalPrice}</td>
                 <td>
                   {order.isPaid ? (
                     order.paidAt ? (

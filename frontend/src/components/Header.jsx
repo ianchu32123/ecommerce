@@ -1,6 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Badge, Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
-import { FaShoppingCart, FaUser } from "react-icons/fa";
+import {
+  FaShoppingCart,
+  FaUser,
+  FaUserEdit,
+  FaRegEdit,
+  FaCreditCard,
+} from "react-icons/fa";
+import { ImStatsDots } from "react-icons/im";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../slices/userApiSlice";
@@ -55,7 +62,7 @@ export default function Header() {
               {userInfo ? (
                 <NavDropdown title={userInfo.name} id="username">
                   <LinkContainer to="/profile">
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                    <NavDropdown.Item>個人介面</NavDropdown.Item>
                   </LinkContainer>
                   <NavDropdown.Item onClick={logoutHandler}>
                     登出
@@ -72,16 +79,28 @@ export default function Header() {
               {userInfo && userInfo.isAdmin && (
                 <NavDropdown title="Admin" id="adminmenu">
                   <LinkContainer to="/admin/report">
-                    <NavDropdown.Item>銷售報告</NavDropdown.Item>
+                    <NavDropdown.Item>
+                      <ImStatsDots />
+                      <span className="ms-2">銷售報告</span>
+                    </NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to="/admin/productlist">
-                    <NavDropdown.Item>產品</NavDropdown.Item>
+                    <NavDropdown.Item>
+                      <FaRegEdit />
+                      <span className="ms-2">產品</span>
+                    </NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to="/admin/userlist">
-                    <NavDropdown.Item>使用者</NavDropdown.Item>
+                    <NavDropdown.Item>
+                      <FaUserEdit />
+                      <span className="ms-2">使用者</span>
+                    </NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to="/admin/orderlist">
-                    <NavDropdown.Item>訂單</NavDropdown.Item>
+                    <NavDropdown.Item>
+                      <FaCreditCard />
+                      <span className="ms-2">訂單</span>
+                    </NavDropdown.Item>
                   </LinkContainer>
                 </NavDropdown>
               )}

@@ -5,6 +5,7 @@ import {
   useCreateReviewMutation,
 } from "../slices/productApiSlice";
 import { Link } from "react-router-dom";
+import { AiFillWarning } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,6 +16,7 @@ import {
   Card,
   Button,
   Form,
+  Modal,
 } from "react-bootstrap";
 import { addToCart } from "../slices/cartSlice";
 import Meta from "../components/Meta";
@@ -29,6 +31,7 @@ export default function ProductScreen() {
   const [qty, setQty] = useState(1);
   const [rating, setrating] = useState(0);
   const [comment, setcomment] = useState("");
+  const [showWarningModal, setShowWarningModal] = useState(false);
 
   const {
     data: product,
@@ -43,8 +46,18 @@ export default function ProductScreen() {
   const { userInfo } = useSelector((state) => state.auth);
 
   const addToCartHandler = function () {
+    if (product.category === "Limit") {
+      setShowWarningModal(true);
+    } else {
+      dispatch(addToCart({ ...product, qty }));
+      toast.success("成功加入購物車");
+    }
+  };
+
+  const handleCloseWarningModal = () => {
+    setShowWarningModal(false);
     dispatch(addToCart({ ...product, qty }));
-    navigate("/cart");
+    toast.success("成功加入購物車");
   };
 
   const submitHandler = async function (e) {
@@ -86,10 +99,10 @@ export default function ProductScreen() {
       <>
         <Meta title={product.name} />
         <Row>
-          <Col md={5}>
+          <Col md={6}>
             <Image src={product.image} alt={product.name} fluid />
           </Col>
-          <Col md={4}>
+          <Col md={6}>
             <ListGroup variant="flush">
               <ListGroup.Item>
                 <h3>{product.name}</h3>
@@ -100,25 +113,25 @@ export default function ProductScreen() {
                   text={`${product.numReviews}則評價`}
                 />
               </ListGroup.Item>
-              <ListGroup.Item>價格: {product.price}</ListGroup.Item>
+
               <ListGroup.Item>產品描述: {product.description}</ListGroup.Item>
-            </ListGroup>
-          </Col>
-          <Col md={3}>
-            <Card>
               <ListGroup variant="flush">
                 <ListGroup.Item>
-                  <Row>
-                    <Col>價格:</Col>
-                    <Col>
+                  <Row className="align-items-center">
+                    <Col xs={4} style={{ textAlign: "left" }}>
+                      價格:
+                    </Col>
+                    <Col xs={8} style={{ textAlign: "left" }}>
                       <strong>{product.price}</strong>
                     </Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <Row>
-                    <Col>狀態:</Col>
-                    <Col>
+                  <Row className="align-items-center">
+                    <Col xs={4} style={{ textAlign: "left" }}>
+                      狀態:
+                    </Col>
+                    <Col xs={8} style={{ textAlign: "left" }}>
                       <strong>
                         {product.countInStock > 0 ? "有庫存" : "無庫存"}
                       </strong>
@@ -129,8 +142,8 @@ export default function ProductScreen() {
                 {product.countInStock > 0 && (
                   <ListGroup.Item>
                     <Row>
-                      <Col>數量</Col>
-                      <Col>
+                      <Col>數量:</Col>
+                      <Col xs={8} style={{ textAlign: "left" }}>
                         <Form.Control
                           as="select"
                           value={qty}
@@ -158,8 +171,9 @@ export default function ProductScreen() {
                   </Button>
                 </ListGroup.Item>
               </ListGroup>
-            </Card>
+            </ListGroup>
           </Col>
+          <Col md={3}></Col>
         </Row>
         <Row className="review">
           <Col md={6}>
@@ -226,6 +240,31 @@ export default function ProductScreen() {
           </Col>
         </Row>
       </>
+
+      <Modal
+        show={showWarningModal}
+        onHide={() => setShowWarningModal(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <AiFillWarning />
+            警告
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>購買此商品需要進行臉部辨識</Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowWarningModal(false)}
+          >
+            取消
+          </Button>
+          <Button variant="primary" onClick={handleCloseWarningModal}>
+            確認
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
