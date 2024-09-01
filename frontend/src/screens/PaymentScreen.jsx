@@ -43,7 +43,7 @@ export default function PaymentScreen() {
             <Form.Check
               type="radio"
               className="my-2"
-              label="PayPal or Credit Card"
+              label="PayPal或信用卡"
               id="PayPal"
               value="PayPal"
               checked

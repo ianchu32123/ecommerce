@@ -44,6 +44,7 @@ export default function ProductEditScreen() {
     try {
       await updateUser({ userId, name, email, isadmin });
       toast.success("使用者更新成功");
+      console.log("Updated User:", user);
       refetch();
       navigate("/admin/userlist");
     } catch (err) {
@@ -93,7 +94,7 @@ export default function ProductEditScreen() {
                 type="checkbox"
                 label="管理員"
                 checked={isadmin}
-                onChange={(e) => setisadmin(e.target.value)}
+                onChange={(e) => setisadmin(e.target.checked)}
               ></Form.Check>
             </Form.Group>
 
