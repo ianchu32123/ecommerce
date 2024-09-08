@@ -10,18 +10,19 @@ import Paginate from "../components/Paginate";
 import ProductCarousel from "../components/ProductCarousel";
 
 export const HomeScreen = () => {
-  const { pageNumber, keyword } = useParams();
+  const { pageNumber, keyword, category } = useParams(); // 取得category參數
   const { data, isLoading, isError, error } = useGetProductsQuery({
     keyword,
     pageNumber,
+    category, // 将 category 传递给查询
   });
 
   return (
     <>
-      {!keyword ? (
+      {!keyword && !category ? ( // 如果沒有keyword和category參數，顯示Carousel和CategoryCards
         <>
           <ProductCarousel />
-          <CategoryCards />{" "}
+          <CategoryCards />
         </>
       ) : (
         <Link to="/" className="btn btn-light mb-4">
@@ -36,7 +37,7 @@ export const HomeScreen = () => {
         </Message>
       ) : (
         <>
-          <h1>最新產品</h1>
+          <h1>{category ? `${category} 產品` : "最新產品"}</h1>
           <Row>
             {data.products.map((product) => (
               <Col key={product._id} sm={12} md={6} lg={4} xl={3}>

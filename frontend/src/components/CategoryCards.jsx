@@ -4,19 +4,19 @@ import { Link } from "react-router-dom";
 
 const categories = [
   {
-    name: "PS5系列",
-    image: "/images/playstation.jpg",
-    link: "/search/play",
+    name: "電子產品類",
+    image: "/images/PS5.jpg",
+    link: "/category/Electronics",
   },
   {
-    name: "手機",
-    image: "/images/phone.jpg",
-    link: "/search/phone",
+    name: "玩具類",
+    image: "/images/pikachu.jpg",
+    link: "/category/Toys",
   },
   {
-    name: "滑鼠",
-    image: "/images/mouse.jpg",
-    link: "/search/mouse",
+    name: "限制級",
+    image: "/images/condom.jpg",
+    link: "/category/Limit",
   },
 ];
 
@@ -26,11 +26,15 @@ export default function CategoryCards() {
       {categories.map((category) => (
         <Col key={category.name} sm={12} md={4}>
           <Card className="mb-3">
-            <Card.Img variant="top" src={category.image} />
+            <Card.Img
+              variant="top"
+              src={category.image}
+              style={{ width: "100%", height: "200px", objectFit: "cover" }}
+            />
             <Card.Body>
-              <Card.Title>我們的{category.name}</Card.Title>
+              <Card.Title>{category.name}</Card.Title>
               <Link to={category.link}>
-                <Button variant="primary">瀏覽</Button>
+                <Button variant="primary">前往</Button>
               </Link>
             </Card.Body>
           </Card>
